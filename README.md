@@ -1,1 +1,1 @@
-# Now you can run your busted unit tests inside Mudlet.
+# Now you can run your busted unit tests inside Mudlet
