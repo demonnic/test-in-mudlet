@@ -58,3 +58,6 @@ jobs:
 ## TO-DO
 
 Add dependencies to allow for asynchronous busted tests, making tests for things that use tempTimers and the like possible.
+
+* `libev-dev` from apt-get
+* `lua-ev` and `copas` from luarocks
