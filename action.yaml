@@ -37,6 +37,10 @@ runs:
     - name: Copy testing profile into place
       run: mkdir -p $HOME/.config/mudlet/profiles && cp -r ${{ github.action_path }}/profiles/GithubTests $HOME/.config/mudlet/profiles/
       shell: bash
+    
+    - name: print directory listing
+      run: ls ${{ github.workspace }} && ls $HOME/.config/mudlet/profiles
+      shell: bash
 
     - name: run tests
       uses: GabrielBB/xvfb-action@v1.6
