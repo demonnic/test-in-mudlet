@@ -31,7 +31,7 @@ runs:
       shell: bash
     
     - name: download Mudlet
-    - run: ${{ github.action_path }}/download-mudlet.sh ${{ inputs.mudletVersion }}
+      run: ${{ github.action_path }}/download-mudlet.sh ${{ inputs.mudletVersion }}
       shell: bash
     
     - name: Copy testing profile into place
