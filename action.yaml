@@ -1,0 +1,47 @@
+name: 'Run Busted tests in Mudlet'
+description: 'Run any busted spec files in your project within Mudlet'
+branding:
+  icon: 'package'
+  color: 'orange'
+inputs:
+  mudletVersion:
+    description: 'Version of Mudlet to use'
+    required: false
+    default: 'LATEST'
+  pretestPackage:
+    description: 'Path to a package to install prior to running tests in Mudlet'
+    required: false
+    default: 'NONE'
+  testsDirectory:
+    description: 'Path to a directory including your tests'
+    required: false
+    default: ${{ github.workspace }}/build/tmp/
+runs:
+  using: "composite"
+  steps:
+    - uses: leafo/gh-actions-lua@v8.0.0
+      with:
+        luaVersion: "5.1.5"
+      
+    - uses: leafo/gh-actions-luarocks@v4.0.0
+
+    - name: install busted
+      run: |
+        luarocks install busted
+    
+    - name: download Mudlet
+    - run: ${{ github.action_path }}/download-mudlet.sh ${{ inputs.mudletVersion }}
+      shell: bash
+    
+    - name: Copy testing profile into place
+      run: mkdir -p $HOME/.config/mudlet/profiles && cp -r ${{ github.action_path }}/profiles/GithubTests $HOME/.config/mudlet/profiles/
+
+    - name: run tests
+      uses: GabrielBB/xvfb-action@v1.6
+      with: 
+        run: cd ${{github.workspace}} && ./Mudlet.AppImage --profile "GithubTests" --mirror
+      env:
+        AUTORUN_BUSTED_TESTS: 'true'
+        TESTS_DIRECTORY: ${{ inputs.testsDirectory }}
+        QUIT_MUDLET_AFTER_TESTS: 'true'
+        PRETEST_PACKAGE: ${{ inputs.preTestPackage }}
