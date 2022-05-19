@@ -39,9 +39,8 @@ runs:
       shell: bash
     
     - name: run tests
-      timeout-minutes: 5
       uses: GabrielBB/xvfb-action@v1.6
-      with: 
+      with:
         run: ${{github.workspace}}/Mudlet.AppImage --profile "GithubTests" --mirror
       env:
         AUTORUN_BUSTED_TESTS: 'true'
