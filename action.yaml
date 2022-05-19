@@ -28,6 +28,7 @@ runs:
     - name: install busted
       run: |
         luarocks install busted
+      shell: bash
     
     - name: download Mudlet
     - run: ${{ github.action_path }}/download-mudlet.sh ${{ inputs.mudletVersion }}
@@ -35,6 +36,7 @@ runs:
     
     - name: Copy testing profile into place
       run: mkdir -p $HOME/.config/mudlet/profiles && cp -r ${{ github.action_path }}/profiles/GithubTests $HOME/.config/mudlet/profiles/
+      shell: bash
 
     - name: run tests
       uses: GabrielBB/xvfb-action@v1.6
@@ -53,3 +55,4 @@ runs:
           echo "Lua tests failed - see the action above for detailed output."
           exit 1
         fi
+      shell: bash
