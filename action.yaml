@@ -30,8 +30,27 @@ runs:
         luarocks install busted
       shell: bash
     
+    - name: Set Mudlet version if LATEST
+      run: |
+        ver=`curl --silent "https://api.github.com/repos/mudlet/mudlet/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")'` \
+        echo "MUDLET_VERSION=$ver" >> $GITHUB_ENV
+      if: ${{ inputs.mudletVersion }} == 'LATEST'
+    
+    - name: Set Mudlet version if not LATEST
+      run: |
+        echo "MUDLET_VERSION=${{ inputs.mudletVersion }}" >> $GITHUB_ENV
+      if: ${{ inputs.mudletVersion }} != 'LATEST'
+    
+    - name: Restore cached Mudlet.AppImage
+      uses: actions/cache@v3
+      id: cache-mudlet
+      with:
+        path: /tmp/Mudlet.AppImage
+        key: ${{ env.MUDLET_VERSION }}
+    
     - name: download Mudlet
-      run: ${{ github.action_path }}/download-mudlet.sh ${{ inputs.mudletVersion }}
+      if: steps.cache-mudlet.outputs.cache-hit != 'true'
+      run: ${{ github.action_path }}/download-mudlet.sh ${{ env.MUDLET_VERSION }}
       shell: bash
     
     - name: Copy testing profile into place
