@@ -30,8 +30,20 @@ runs:
         luarocks install busted
       shell: bash
     
+    - name: Set Mudlet version
+      run: ${{ github.action_path }}/set-mudlet-version.sh ${{ inputs.mudletVersion }}
+      shell: bash
+
+    - name: Restore cached Mudlet.AppImage
+      uses: actions/cache@v3
+      id: cache-mudlet
+      with:
+        path: /tmp/Mudlet.AppImage
+        key: ${{ env.MUDLET_VERSION }}
+    
     - name: download Mudlet
-      run: ${{ github.action_path }}/download-mudlet.sh ${{ inputs.mudletVersion }}
+      if: steps.cache-mudlet.outputs.cache-hit != 'true'
+      run: ${{ github.action_path }}/download-mudlet.sh ${{ env.MUDLET_VERSION }}
       shell: bash
     
     - name: Copy testing profile into place
@@ -41,7 +53,7 @@ runs:
     - name: run tests
       uses: GabrielBB/xvfb-action@v1.6
       with:
-        run: ${{github.workspace}}/Mudlet.AppImage --profile "GithubTests" --mirror
+        run: /tmp/Mudlet.AppImage --profile "GithubTests" --mirror
       env:
         AUTORUN_BUSTED_TESTS: 'true'
         TESTS_DIRECTORY: ${{ inputs.testsDirectory }}
