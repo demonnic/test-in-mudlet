@@ -30,20 +30,10 @@ runs:
         luarocks install busted
       shell: bash
     
-    - name: Set Mudlet version if LATEST
-      if: ${{ inputs.mudletVersion }} == 'LATEST'
-      run: |
-        ver=`curl --silent "https://api.github.com/repos/mudlet/mudlet/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")'` \
-        echo "MUDLET_VERSION=$ver" >> $GITHUB_ENV
+    - name: Set Mudlet version
+      run: ${{ github.action_path }}/set-mudlet-version.sh ${{ inputs.mudletVersion }}
       shell: bash
 
-    
-    - name: Set Mudlet version if not LATEST
-      if: ${{ inputs.mudletVersion }} != 'LATEST'
-      run: |
-        echo "MUDLET_VERSION=${{ inputs.mudletVersion }}" >> $GITHUB_ENV
-      shell: bash
-    
     - name: Restore cached Mudlet.AppImage
       uses: actions/cache@v3
       id: cache-mudlet
@@ -63,7 +53,7 @@ runs:
     - name: run tests
       uses: GabrielBB/xvfb-action@v1.6
       with:
-        run: ${{github.workspace}}/Mudlet.AppImage --profile "GithubTests" --mirror
+        run: /tmp/Mudlet.AppImage --profile "GithubTests" --mirror
       env:
         AUTORUN_BUSTED_TESTS: 'true'
         TESTS_DIRECTORY: ${{ inputs.testsDirectory }}
