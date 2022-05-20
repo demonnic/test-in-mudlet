@@ -31,15 +31,18 @@ runs:
       shell: bash
     
     - name: Set Mudlet version if LATEST
+      if: ${{ inputs.mudletVersion }} == 'LATEST'
       run: |
         ver=`curl --silent "https://api.github.com/repos/mudlet/mudlet/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")'` \
         echo "MUDLET_VERSION=$ver" >> $GITHUB_ENV
-      if: ${{ inputs.mudletVersion }} == 'LATEST'
+      shell: bash
+
     
     - name: Set Mudlet version if not LATEST
+      if: ${{ inputs.mudletVersion }} != 'LATEST'
       run: |
         echo "MUDLET_VERSION=${{ inputs.mudletVersion }}" >> $GITHUB_ENV
-      if: ${{ inputs.mudletVersion }} != 'LATEST'
+      shell: bash
     
     - name: Restore cached Mudlet.AppImage
       uses: actions/cache@v3
