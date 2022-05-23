@@ -1,6 +1,6 @@
 # test-in-mudlet
 
-A github action to run your busted test specs inside of Mudlet.
+A github action to run your busted test specs inside of [Mudlet](https://www.mudlet.org/).
 
 [Busted](https://olivinelabs.com/busted/#overview) is a featureful testing framework for testing Lua code, and is the framework that Mudlet makes use of for testing its own Lua API.
 
