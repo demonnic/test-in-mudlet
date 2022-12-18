@@ -33,6 +33,7 @@ runs:
     - name: install libfuse2
       run: |
         sudo apt install -y libfuse2
+      shell: bash
 
     - name: Set Mudlet version
       run: ${{ github.action_path }}/set-mudlet-version.sh ${{ inputs.mudletVersion }}
